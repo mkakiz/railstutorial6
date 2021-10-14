@@ -33,6 +33,10 @@ module SessionsHelper
     end
   end
 
+  def current_user?(user)
+    user && user == current_user
+  end
+
   def logged_in?
     !current_user.nil? # current_user is not nil, then logged in
   end
@@ -43,6 +47,18 @@ module SessionsHelper
     @current_user = nil
   end
 
+  def redirect_back_or(default)
+    redirect_to(session[:forwarding_url] || default)
+        # redirect back to memorized or default url
+    session.delete(:forwarding_url)
+  end
 
+  def store_location
+    session[:forwarding_url] = request.original_url if request.get?
+        # memorize url that user attempted to access
+        # request == what user requested
+        # original_url == url that user wanted to go
+        # request.get == user requested get request (not post, delete, etc)
+  end
 
 end

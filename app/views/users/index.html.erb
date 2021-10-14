@@ -1,0 +1,16 @@
+<% provide(:title, 'All users') %>
+<h1>All users</h1>
+
+<%= will_paginate %>
+
+<ul class="users">
+  <%= render @users %>
+    # @users is set of users in index action
+    # by passing @users to render as argument, 
+    # get user model's instances, and render each user
+        # <% @users.each do |user| %>
+        #   <%= render user %>
+        # <% end %>
+</ul>
+
+<%= will_paginate %>

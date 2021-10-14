@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
           #   forget(user)
           # end
           ## login form, name="session[remember_me]"
-      redirect_to user # get "/users/#{@user.id}"
+      redirect_back_or user # redirect back to memorized or default url
     else
       flash.now[:danger] = 'Invalid email/password combination'
       render "new"
