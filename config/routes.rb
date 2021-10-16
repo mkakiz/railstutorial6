@@ -20,4 +20,10 @@ Rails.application.routes.draw do
       #                 PUT	    /users/:id(.:format)	      users#update
       #                 DELETE	/users/:id(.:format)        users#destroy
 
+  resources :account_activations, only: [:edit]
+      # edit_account_activation_path(token)	
+      #   GET	  /account_activations/<token>/edit(.:format)	
+      #     account_activations#edit
+      # => user_mailer.rb works like controller
+      # => edit_account_activation_url works
 end
