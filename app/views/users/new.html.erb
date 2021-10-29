@@ -4,8 +4,9 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= form_with(model: @user, local: true) do |f| %>
-      <%= render 'shared/error_messages' %>
-
+      <%= render 'shared/error_messages', object: f.object %>
+            <%# error_message => @user %>
+            <%# f.object => 'model: @user' %>
       <%= f.label :name %>
       <%= f.text_field :name, class: 'form-control' %>
 
@@ -19,7 +20,6 @@
       <%= f.password_field :password_confirmation, class: 'form-control' %>
 
       <%= f.submit "Create my account", class: "btn btn-primary" %>
-
     <% end %>
   </div>
 </div>
