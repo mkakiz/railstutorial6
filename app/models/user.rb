@@ -1,5 +1,28 @@
 class User < ApplicationRecord
   has_many :microposts, dependent: :destroy
+      # by default, class_name: "Micropost"
+      # by default, foreign_key: "user_id"
+
+  has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+      # has_many :(creating method name), class_name: (referred class name)
+      #   active_relationships method is created to access instances in Relationship class from User class
+      #   foreign_key is to specifiy external key name in referred class
+      #     Here, follower_id in Relationship class can be used in User class
+
+  has_many :passive_relationships, class_name:  "Relationship", foreign_key: "followed_id", dependent:   :destroy
+
+  has_many :following, through: :active_relationships, source: :followed
+      # has_many :{creating method name}, through: (specified integrated model)
+      #   => following class is created.
+      #   following method does below
+      #     => active_relationship method is carried out to the instance in user class
+      #     => instances in Relationship table are obtained.
+      #     => followed method is carried out to each item in the instance of Relationship table.     
+      #     ==> ex. @user.active_relationships.map(&:followed)
+      #     ===> followed method is defined in Relationship class belongs to follower
+
+  has_many :followers, through: :passive_relationships, source: :follower
+
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save   :downcase_email
   before_create :create_activation_digest
@@ -75,9 +98,24 @@ class User < ApplicationRecord
   end
 
   def feed
-    Micropost.where("user_id=?", self.id)
-        # SQL grammer
+    following_ids = "SELECT followed_id FROM relationships
+        WHERE follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids})
+        OR user_id = :user_id", user_id: id)
   end
+
+  def follow(other_user)
+    following << other_user
+  end
+
+  def unfollow(other_user)
+    active_relationships.find_by(followed_id: other_user.id).destroy
+  end
+
+  def following?(other_user)
+    following.include?(other_user)
+  end
+
 
   
   private

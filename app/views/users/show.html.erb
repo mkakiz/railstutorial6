@@ -7,19 +7,16 @@
         <%= @user.name %>
       </h1>
     </section>
+    <section class="stats">
+      <%= render 'shared/stats' %>
+    </section>
   </aside>
   <div class="col-md-8">
+    <%= render 'follow_form' if logged_in? %>
     <% if @user.microposts.any? %>
       <h3>Microposts (<%= @user.microposts.count %>)</h3>
       <ol class="microposts">
         <%= render @microposts %>
-            # Rails see @microposts as set of microposts.
-            # by passing @microposts to render as argument, 
-            # get micropost model's instances, and render each micropost
-                # <% @microposts.each do |micropost| %>
-                #   <%= render micropost %>
-                # <% end %>
-            # render => _micropost.html.erb
       </ol>
       <%= will_paginate @microposts %>
     <% end %>

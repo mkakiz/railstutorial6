@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :following, :followers]
       # when method is called, symbol (:***) is used in many cases
       # logged_in_user is in Application_Controller
   before_action :correct_user,   only: [:edit, :update]
@@ -55,6 +55,21 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
+  # get /users/:id/following
+  def following
+    @title = "Following"
+    @user  = User.find(params[:id])
+    @users = @user.following.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  # get /users/:id/followers
+  def followers
+    @title = "Followers"
+    @user  = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
+  end
 
 
   private
